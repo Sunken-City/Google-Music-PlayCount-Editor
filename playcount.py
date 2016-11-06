@@ -1,25 +1,26 @@
-from gmusicapi import Webclient
-wc = Webclient()
+from gmusicapi import Mobileclient
+mc = Mobileclient()
 
-username = raw_input("U: ")
-password = raw_input("P: ")
+username = input("U: ")
+password = input("P: ")
+androidid = mc.FROM_MAC_ADDRESS
 
-wc.login(username, password)
+mc.login(username, password, androidid)
 
-print "Getting Songs... (This may take some time)"
-library = wc.get_all_songs()
+print("Getting Songs... (This may take some time)")
+library = mc.get_all_songs()
 notFound = True
 
 while notFound:
-  songName = raw_input("Name of song to change: ")
+  songName = input("Name of song to change: ")
   song = [track for track in library if track['title'] == songName]
   if song is None:
-    print "Song not found."
+    print("Song not found.")
   else:
     notFound = False
 
-playCount = input("New play count: ")
-song[0]['playCount'] = playCount
-wc.change_song_metadata(song)
-print "Done!"
+songID = song[0]['id']
+playCount = eval(input("New play count: "))
+mc.increment_song_playcount(songID, plays=playCount)
+print("Done!")
 
